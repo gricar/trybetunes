@@ -1,11 +1,39 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Redirect } from 'react-router';
+import Loading from './Loading';
+import { createUser } from '../services/userAPI';
 
 class Login extends Component {
+  state = {
+    userName: '',
+    isLoginButtonDisabled: true,
+    isLoading: false,
+    dataReceveid: false,
+  };
+
+  onUserInputChange = ({ target }) => {
+    const { name, value } = target;
+    const minUserName = 3;
+
+    this.setState({
+      [name]: value,
+      isLoginButtonDisabled: value.length < minUserName,
+    });
+  }
+
+  loginBtn = async () => {
+    this.setState({ isLoading: true });
+    const { userName } = this.state;
+    const savedUser = await createUser({ name: userName });
+    if (savedUser) this.setState({ isLoading: false, dataReceveid: true });
+  }
+
   render() {
-    const { userName, isLoginButtonDisabled, onUserInputChange, isLoading } = this.props;
+    const { userName, isLoginButtonDisabled, isLoading, dataReceveid } = this.state;
     return (
       <div data-testid="page-login">
+        { isLoading && <Loading /> }
+        { dataReceveid && <Redirect to="/search" /> }
         <form>
           <label htmlFor="userName">
             <input
@@ -15,14 +43,14 @@ class Login extends Component {
               placeholder="Digite o seu nome..."
               data-testid="login-name-input"
               value={ userName }
-              onChange={ onUserInputChange }
+              onChange={ this.onUserInputChange }
             />
           </label>
           <button
             type="button"
             data-testid="login-submit-button"
             disabled={ isLoginButtonDisabled }
-            onClick={ isLoading }
+            onClick={ this.loginBtn }
           >
             Entrar
           </button>
@@ -33,12 +61,3 @@ class Login extends Component {
 }
 
 export default Login;
-
-const { string, func, bool } = PropTypes;
-
-Login.propTypes = {
-  userName: string.isRequired,
-  isLoginButtonDisabled: bool.isRequired,
-  onUserInputChange: func.isRequired,
-  isLoading: func.isRequired,
-};
