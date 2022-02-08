@@ -53,7 +53,7 @@ class Album extends Component {
     if (checked) {
       const musicChecked = listOfMusics.find(({ trackId }) => trackId === Number(id));
       await addSong(musicChecked);
-      this.setState({ loading: false });
+      this.setState({ loading: false }, () => this.getFavMusics());
     }
   }
 
