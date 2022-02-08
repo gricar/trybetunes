@@ -66,22 +66,28 @@ class Album extends Component {
     return (
       <div data-testid="page-album">
         <Header />
-        { loading && <Loading /> }
-        <div>
-          <h3 data-testid="artist-name">{ artistName }</h3>
-          <h3 data-testid="album-name">{ collectionName }</h3>
-          <img src={ imgUrl } alt={ artistName } />
-          {
-            listOfMusics.map((music) => (
-              <MusicCard
-                key={ music.trackName }
-                music={ music }
-                onChange={ (event) => this.addOrRemoveFavSong(event) }
-                checked={ arrFavMusics.some(({ trackId }) => trackId === music.trackId) }
-              />
-            ))
-          }
-        </div>
+        {
+          loading
+            ? <Loading />
+            : (
+              <div>
+                <h3 data-testid="artist-name">{ artistName }</h3>
+                <h3 data-testid="album-name">{ collectionName }</h3>
+                <img src={ imgUrl } alt={ artistName } />
+                {
+                  listOfMusics.map((music) => (
+                    <MusicCard
+                      key={ music.trackName }
+                      music={ music }
+                      onChange={ (event) => this.addOrRemoveFavSong(event) }
+                      checked={ arrFavMusics
+                        .some(({ trackId }) => trackId === music.trackId) }
+                    />
+                  ))
+                }
+              </div>
+            )
+        }
       </div>
     );
   }
