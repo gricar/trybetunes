@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class MusicCard extends Component {
   render() {
-    const { music: { trackId, trackName, previewUrl }, onChange, checked } = this.props;
+    const { music: { trackId, trackName, previewUrl }, checked, onChange } = this.props;
     return (
       <div className="musicPlayer">
         <h3>{ trackName }</h3>
@@ -28,11 +28,14 @@ class MusicCard extends Component {
 
 export default MusicCard;
 
+const { bool, func, number, string } = PropTypes;
+
 MusicCard.propTypes = {
-  onChange: PropTypes.func.isRequired,
   music: PropTypes.shape({
-    trackId: PropTypes.number,
-    trackName: PropTypes.string,
-    previewUrl: PropTypes.string,
+    trackId: number,
+    trackName: string,
+    previewUrl: string,
   }).isRequired,
+  checked: bool.isRequired,
+  onChange: func.isRequired,
 };

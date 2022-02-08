@@ -59,7 +59,7 @@ class Album extends Component {
 
   render() {
     const {
-      artistName, collectionName, imgUrl, listOfMusics, arrFavMusics, loading
+      artistName, collectionName, imgUrl, listOfMusics, arrFavMusics, loading,
     } = this.state;
     return (
       <div data-testid="page-album">
