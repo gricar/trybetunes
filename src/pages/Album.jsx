@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import MusicCard from '../components/MusicCard';
 import Loading from './Loading';
 import getMusics from '../services/musicsAPI';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   state = {
@@ -45,16 +45,18 @@ class Album extends Component {
     });
   }
 
-  addFavSong = async ({ target }) => {
+  addOrRemoveFavSong = async ({ target }) => {
     this.setState({ loading: true });
 
     const { checked, id } = target;
     const { listOfMusics } = this.state;
+    const musicChecked = listOfMusics.find(({ trackId }) => trackId === Number(id));
     if (checked) {
-      const musicChecked = listOfMusics.find(({ trackId }) => trackId === Number(id));
       await addSong(musicChecked);
-      this.setState({ loading: false }, () => this.getFavMusics());
+    } else {
+      await removeSong(musicChecked);
     }
+    this.setState({ loading: false }, () => this.getFavMusics());
   }
 
   render() {
@@ -74,7 +76,7 @@ class Album extends Component {
               <MusicCard
                 key={ music.trackName }
                 music={ music }
-                onChange={ (event) => this.addFavSong(event) }
+                onChange={ (event) => this.addOrRemoveFavSong(event) }
                 checked={ arrFavMusics.some(({ trackId }) => trackId === music.trackId) }
               />
             ))
